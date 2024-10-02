@@ -44,14 +44,13 @@ namespace EjemploLogin
 
         static void Main(string[] args)
         {
-            string path = "C:\\Ejemplos\\SistemaArchivos\\users.txt";
+            string path = "C:\\Ejemplos\\SistemaArchivos\\users_index.txt";
             string[] lineas = { };
             bool usuarioEncontrado = false;
-            string nombre = "";
+
 
             string path_enhanced = "C:\\Ejemplos\\SistemaArchivos\\users_enhanced.txt";
-            string registro = GetRecord(path_enhanced, 2);
-
+            
 
             if (File.Exists(path))
             {
@@ -64,27 +63,27 @@ namespace EjemploLogin
             Console.Write("Contraseña: ");
             String password = Console.ReadLine();
 
+
             for (int i = 0; i < lineas.Length; i++)
             {
                 string[] campos = lineas[i].Split('|');
-                if (campos[1].Equals(username))
+                if (campos[0].Trim().Equals(username))
                 {
+                    int index_enhanced_file = Convert.ToInt32(campos[1]);
+                    string registro = GetRecord(path_enhanced, index_enhanced_file);
+                    string nombre = registro.Split('|')[0].Trim();
+                    string password_guardado = registro.Split('|')[2].Trim();
 
-                    if (campos[2].ToLower().Equals( GetMD5Hash(password).ToLower() ))
+                    if (password_guardado.ToLower().Equals( GetMD5Hash(password).ToLower() )) //maalonsog@correo.url.edu.gt  password123
                     {
                         usuarioEncontrado = true;
-                        nombre = campos[0];
+                        Console.WriteLine("Bienvenido " + nombre);
                     }
                     
                 } 
             }
 
-            if (usuarioEncontrado)
-            {
-                Console.WriteLine("Bienvenido " + nombre);
-            }
-            else 
-            {
+            if (!usuarioEncontrado) { 
                 Console.WriteLine("Usuario o Contraseña incorrecta");
             }
 
